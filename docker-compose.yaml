@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  fastapi-app:
+    image: tiangolo/uvicorn-gunicorn-fastapi:python3.8
+    command: uvicorn backend.main:app --port 8000 --reload --host 0.0.0.0
+    ports:
+      - '8000:8000'
+    volumes:
+      - gopro_storage:/gopro_storage
+    devices:
+      - '/dev/bus/usb:/dev/bus/usb'
+
+  sftp:
+    image: atmoz/sftp
+    volumes:
+      - gopro_storage:/home/test/gopro_storage
+    environment:
+      - SFTP_USERS=test:test
+
+volumes:
+  gopro_storage:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: /Users/jeanhastoy/Documents/gopro_test
