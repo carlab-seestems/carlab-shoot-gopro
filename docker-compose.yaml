@@ -11,13 +11,6 @@ services:
     devices:
       - '/dev/bus/usb:/dev/bus/usb'
 
-  sftp:
-    image: atmoz/sftp
-    volumes:
-      - gopro_storage:/home/test/gopro_storage
-    environment:
-      - SFTP_USERS=test:test
-
 volumes:
   gopro_storage:
     driver: local

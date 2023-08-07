@@ -4,9 +4,10 @@ from fastapi import APIRouter, HTTPException
 import requests
 import os
 from backend import schemas
-from backend.config import LOCAL_STORAGE_PATH
+from backend.config import LOCAL_STORAGE_PATH, SFTP_HOSTNAME, SFTP_PASSWORD, SFTP_PORT, SFTP_USERNAME
 
 from backend.utils import CameraBusyException, check_camera_ready, download_and_save_file, get_ip_address, send_command, send_modify_setting
+import paramiko
 
 router = APIRouter()
 
@@ -101,3 +102,26 @@ def modify_setting(serial_number: str, setting: int, option: int):
         ip, f"http://{ip}/gopro/camera/setting?setting={setting}&option={option}")
 
     return response
+
+
+@router.post("/upload-to-sftp/")
+def upload_to_sftp(file_path: str, remote_path: str):
+
+    try:
+        transport = paramiko.Transport((SFTP_HOSTNAME, SFTP_PORT))
+        transport.connect(username=SFTP_USERNAME, password=SFTP_PASSWORD)
+        sftp = transport.open_sftp()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+    try:
+        sftp.put(file_path, remote_path)
+    except Exception as e:
+        sftp.close()
+        transport.close()
+        raise HTTPException(status_code=500, detail=str(e))
+
+    sftp.close()
+    transport.close()
+
+    return {"message": "File uploaded successfully"}
