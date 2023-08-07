@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   fastapi-app:
-    image: tiangolo/uvicorn-gunicorn-fastapi:python3.8
+    build: .
     command: uvicorn backend.main:app --port 8000 --reload --host 0.0.0.0
     ports:
       - '8000:8000'
