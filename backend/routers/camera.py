@@ -60,6 +60,9 @@ def stop_recording(serial_number: str):
     # Download and save the file
     file_info = download_and_save_file(serial_number, media_url)
 
+    send_command(
+        ip, f"http://{ip}/gopro/media/delete/file?path={directory_name}/{latest_media_name}")
+
     return file_info
 
 
@@ -93,6 +96,23 @@ def list_local_files():
             )
             file_list.append(file_info)
     return file_list
+
+
+@router.get("/list-camera-files/")
+def list_camera_files(serial_number: str):
+    ip = get_ip_address(serial_number)
+    media_list = send_command(ip, f"http://{ip}/gopro/media/list")
+
+    return media_list
+
+
+@router.get("/delete-camera-file/")
+def delete_camera_files(serial_number: str, file_path: str):
+    ip = get_ip_address(serial_number)
+    media_list = send_command(
+        ip, f"http://{ip}/gopro/media/delete/file?path={file_path}")
+
+    return media_list
 
 
 @router.get("/modify-settings/")
