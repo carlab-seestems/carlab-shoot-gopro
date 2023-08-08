@@ -5,16 +5,16 @@ services:
     build: .
     command: uvicorn backend.main:app --port 8000 --reload --host 0.0.0.0
     ports:
-      - '8000:8000'
+      - '80:8000'
     volumes:
-      - gopro_storage:/gopro_storage
+      - storage:/gopro_storage
     devices:
       - '/dev/bus/usb:/dev/bus/usb'
 
 volumes:
-  gopro_storage:
+  storage:
     driver: local
     driver_opts:
       o: bind
       type: none
-      device: /Users/jeanhastoy/Documents/gopro_test
+      device: /home/pi/storage
