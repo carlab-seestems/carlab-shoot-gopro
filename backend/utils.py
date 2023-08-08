@@ -58,12 +58,12 @@ def check_camera_ready(ip):
     camera_state = response.json()['status']
 
     # Check internal battery presence
-    if camera_state['1'] == 0:
-        raise BatteryNotPresentException()
+    # if camera_state['1'] == 0:
+    #     raise BatteryNotPresentException()
 
-    # Check internal battery level
-    if camera_state['2'] == 0:
-        raise BatteryLevelZeroException()
+    # # Check internal battery level
+    # if camera_state['2'] == 0:
+    #     raise BatteryLevelZeroException()
 
     # Check if the system is overheating
     if camera_state['6'] == 1:
