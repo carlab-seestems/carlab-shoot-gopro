@@ -8,13 +8,18 @@ WORKDIR /usr/src/app
 RUN apt-get update && \
     apt-get install -y \
     python3 \
+    python3-venv \
     python3-pip
 
 # Copy the local requirements.txt file into the container
 COPY requirements.txt ./
 
 # Install the Python packages from requirements.txt
-RUN pip3 install --no-cache-dir -r requirements.txt
+# Create a virtual environment
+RUN python3 -m venv /app/venv
+
+# Activate virtual environment for subsequent commands
+ENV PATH="/app/venv/bin:$PATH"
 
 COPY . .
 
