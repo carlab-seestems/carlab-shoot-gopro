@@ -108,12 +108,12 @@ def send_modify_setting(ip, setting_url):
     return response.json()
 
 
-def download_and_save_file(serial_number, file_url):
+def download_and_save_file(serial_number, file_url, save_path):
     response = requests.get(file_url, stream=True)
     response.raise_for_status()
 
     # Including the serial number in the filename
-    filename_with_serial = f"{serial_number}_{os.path.basename(file_url)}"
+    filename_with_serial = f"{serial_number}_{save_path}.mp4"
     full_save_path = os.path.join(LOCAL_STORAGE_PATH, filename_with_serial)
 
     with open(full_save_path, 'wb') as file:

@@ -19,7 +19,7 @@ def start_recording(serial_number: str):
 
 
 @router.get("/stop-recording/", response_model=schemas.FileInfo)
-def stop_recording(serial_number: str):
+def stop_recording(serial_number: str, file_reference_name: str):
     ip = get_ip_address(serial_number)
 
     # Stop recording command
@@ -58,7 +58,8 @@ def stop_recording(serial_number: str):
     media_url = f"http://{ip}/videos/DCIM/{directory_name}/{latest_media_name}"
 
     # Download and save the file
-    file_info = download_and_save_file(serial_number, media_url)
+    file_info = download_and_save_file(
+        serial_number, media_url, file_reference_name)
 
     send_command(
         ip, f"http://{ip}/gopro/media/delete/file?path={directory_name}/{latest_media_name}")
